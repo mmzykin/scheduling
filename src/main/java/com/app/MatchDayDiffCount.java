@@ -18,8 +18,8 @@ public class MatchDayDiffCount {
     public MatchDayDiffCount(){
         this.match = null;
         this.day = null;
-        this.dayDiff = 0;
-        this.countVars = Integer.MAX_VALUE;
+        this.dayDiff = -Integer.MAX_VALUE;
+        this.countVars = 0;
     }
     //getters and setters
     public Match getMatch() {

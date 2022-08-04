@@ -44,7 +44,7 @@ public class ScheduleRepairApp {
               
         //Сохранение результата работы функции doRepair в xml файл
         //Временно закомментил вывод в файл, пока doRepair не реализованна
-        //solutionFileIO.write(solution, new File(outputFile));    
+        solutionFileIO.write(solution, new File(outputFile));    
     }
     
     private static void doRepair(TravelingTournament solution) {
@@ -112,24 +112,25 @@ public class ScheduleRepairApp {
     //     _idMatchCollectionMins.add(match.getId(), day, min);
     //     }
     //     // check if there are matches with the same diff and 
-    MatchDayDiffCount besMatchDayDiffCount = new MatchDayDiffCount();
     while (!rescheduleMatches.isEmpty()){
+        MatchDayDiffCount besMatchDayDiffCount = new MatchDayDiffCount();
         HardSoftScore startScore = rater.calculateScore(solution);
         for (Match match : rescheduleMatches){
-            MatchDayDiffCount currentMatchDayDiffCount = new MatchDayDiffCount( match, null, Integer.MAX_VALUE, 0);
+            MatchDayDiffCount currentMatchDayDiffCount = new MatchDayDiffCount( match, null, -Integer.MIN_VALUE, 0);
             for (Day day : solution.getDayList()) {
                 if (Modificator.checkDate(solution, match, day)) {
                     Modificator.setDate(solution, match, day);
                     HardSoftScore newScore = rater.calculateScore(solution);
                     Integer diff = (Integer) newScore.getHardScore() - (Integer) startScore.getHardScore();
-                    if (diff < currentMatchDayDiffCount.getDayDiff()) {
+                    if (diff > currentMatchDayDiffCount.getDayDiff()) {
                         currentMatchDayDiffCount.setDayDiff(diff);
                         currentMatchDayDiffCount.setDay(day);
                     }
                 }
                 currentMatchDayDiffCount.countVars++;
+                Modificator.setDate(solution, match, null);
             }
-            if (currentMatchDayDiffCount.getDayDiff() < besMatchDayDiffCount.getDayDiff()) {
+            if (currentMatchDayDiffCount.getDayDiff() > besMatchDayDiffCount.getDayDiff()) {
                 besMatchDayDiffCount = currentMatchDayDiffCount;
             }
             else if (currentMatchDayDiffCount.getDayDiff() == besMatchDayDiffCount.getDayDiff()) {
@@ -139,7 +140,9 @@ public class ScheduleRepairApp {
             }
         }
         Modificator.setDate(solution, besMatchDayDiffCount.getMatch(), besMatchDayDiffCount.getDay());
+        // delete match from besMatchDayDiffCount.getMatch() from rescheduleMatches
         rescheduleMatches.remove(besMatchDayDiffCount.getMatch());
+        System.out.println("Match " + besMatchDayDiffCount.getMatch().getId() + " is rescheduled to " + besMatchDayDiffCount.getDay().getId());
         System.out.println(rescheduleMatches.size());
         }
     }     
