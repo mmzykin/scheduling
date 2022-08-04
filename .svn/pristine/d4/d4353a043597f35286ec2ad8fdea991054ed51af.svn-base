@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark>
+  <benchmarkDirectory>local/data/travelingtournament</benchmarkDirectory>
+  <parallelBenchmarkCount>AUTO</parallelBenchmarkCount>
+
+  <inheritedSolverBenchmark>
+    <problemBenchmarks>
+      <solutionFileIOClass>persistence.XStreamTravelingTournamentFileIO</solutionFileIOClass>
+      <inputSolutionFile>data/tournament 19-20 blank.xml</inputSolutionFile>
+      <problemStatisticType>BEST_SCORE</problemStatisticType>
+      <problemStatisticType>STEP_SCORE</problemStatisticType>
+      <problemStatisticType>SCORE_CALCULATION_SPEED</problemStatisticType>-->
+      <problemStatisticType>BEST_SOLUTION_MUTATION</problemStatisticType>-->
+    </problemBenchmarks>
+    <solver>
+      <solutionClass>domain.TravelingTournament</solutionClass>
+      <entityClass>domain.Match</entityClass>
+      <entityClass>domain.NewTeamAssignment</entityClass>
+      <scoreDirectorFactory>
+        <scoreDrl>solver/travelingTournamentScoreRules.drl</scoreDrl>
+      </scoreDirectorFactory>
+      <termination>
+       <!--<hoursSpentLimit>2</hoursSpentLimit>-->
+        <!--<minutesSpentLimit>1</minutesSpentLimit>-->
+        <unimprovedHoursSpentLimit>12</unimprovedHoursSpentLimit>
+        <bestScoreLimit>-110hard/-2200000soft</bestScoreLimit>
+      </termination>
+    </solver>
+  </inheritedSolverBenchmark>
+
+  <solverBenchmark>
+    <name>base</name>
+    <solver>
+      <localSearch>
+        <unionMoveSelector>
+          <swapMoveSelector>
+            <cacheType>PHASE</cacheType>
+            <selectionOrder>SHUFFLED</selectionOrder>
+            <filterClass>solver.move.factory.InverseMatchSwapMoveFilter</filterClass>
+          </swapMoveSelector>
+          <moveListFactory>
+            <cacheType>STEP</cacheType>
+            <selectionOrder>SHUFFLED</selectionOrder>
+            <moveListFactoryClass>solver.move.factory.MatchChainRotationsMoveFactory</moveListFactoryClass>
+          </moveListFactory>
+        </unionMoveSelector>
+        <acceptor>
+       	  <simulatedAnnealingStartingTemperature>0hard/10000soft</simulatedAnnealingStartingTemperature>
+      	  <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>4</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+      
+  <benchmarkReport>
+    <locale>en_US</locale>
+  </benchmarkReport>
+  
+</plannerBenchmark>

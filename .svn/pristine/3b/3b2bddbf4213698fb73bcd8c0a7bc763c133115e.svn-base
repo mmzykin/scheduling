@@ -1,0 +1,148 @@
+/*
+ * Copyright 2010 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.domain;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.common.domain.AbstractPersistable;
+
+import lombok.Getter;
+import lombok.Setter;
+
+
+public class Team extends AbstractPersistable {
+    private String name;
+    private Map<Team, Integer> distanceToTeamMap;
+    
+    @Getter @Setter 
+    private TreeMap<Day, Period> periodByDayMap;
+    
+    
+    private Long arenaId;
+    private RegionType regionType;
+    
+    
+    //tmp 29.11
+    private Integer group;
+
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Map<Team, Integer> getDistanceToTeamMap() {
+        return distanceToTeamMap;
+    }
+
+    public void setDistanceToTeamMap(Map<Team, Integer> distanceToTeamMap) {
+        this.distanceToTeamMap = distanceToTeamMap;
+    }
+
+    public int getDistance(Team other) {
+        if (this.id == other.id) {
+            return 0;
+        } else {
+            return distanceToTeamMap.get(other);
+        }
+    }
+
+    public boolean checkHomeNaCondition(Day startDay, Day endDay, int minDayCount, double minRatio) {
+        Period period = null;
+        
+        if(periodByDayMap.containsKey(startDay)) {
+            period = periodByDayMap.get(startDay);
+        }
+        else if(periodByDayMap.containsKey(endDay)) {
+            period = periodByDayMap.get(endDay);
+        }
+        
+        if(period != null && period.getPeriodType() == MatchType.AWAY && minDayCount <= period.getEndDayIndex() - period.getBeginDayIndex() + 1) {
+            int startIndx = startDay.getIndex();
+            int endIndx = endDay.getIndex();
+            int startIndx2 = (period.getBeginDayIndex()>startIndx)?period.getBeginDayIndex():startIndx;
+            int endIndx2 = (period.getEndDayIndex()>endIndx)?endIndx:period.getEndDayIndex();
+            
+            double ratio = (double)(endIndx2-startIndx2+1)/(double)(endIndx-startIndx+1);
+            
+            if(ratio >= minRatio) {
+                return true;
+            }
+        }
+        
+        
+        return false;
+    }
+    
+    public int getLenConsecutiveHomeNA(Day startDay, Day endDay) {
+        int len = 0;
+        
+        if(periodByDayMap.containsKey(startDay)) {
+            Period period = periodByDayMap.get(startDay);
+            
+            if(period.getPeriodType() == MatchType.AWAY && period.getEndDayIndex() >=  endDay.getIndex()) {
+                len = period.getEndDayIndex() - period.getBeginDayIndex() + 1;
+            }
+        }
+        return len;
+    }
+    
+    public MatchType getMatchType(Day day) {
+        if (periodByDayMap.containsKey(day)){
+            return periodByDayMap.get(day).getPeriodType();
+        }
+
+        return null;
+    }
+
+    public String getLabel() {
+        return name;
+    }
+
+    public Long getArenaId() {
+        return arenaId;
+    }
+
+    public void setArenaId(Long arenaId) {
+        this.arenaId = arenaId;
+    }
+
+    public RegionType getRegionType() {
+        return regionType;
+    }
+
+    public void setRegionType(RegionType regionType) {
+        this.regionType = regionType;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+}

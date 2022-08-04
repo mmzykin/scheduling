@@ -1,0 +1,401 @@
+package com.persistence;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.domain.ArenaAssignment;
+import com.domain.Day;
+import com.domain.LogisticGroup;
+import com.domain.Match;
+import com.domain.MatchType;
+import com.domain.Period;
+import com.domain.Team;
+import com.domain.TeamAssignment;
+import com.domain.TravelingTournament;
+import com.persistence.model.*;
+
+public class TransformViewToSolution {
+
+    private TravelingTournament solution;
+    private TournamentData view;
+
+    public TravelingTournament convert(TournamentData tournamentData, Boolean ignoreDaysAssignment) {
+        view = tournamentData;
+        solution = new TravelingTournament();
+        solution.setId(view.getId());
+        setDayList();
+        setTeamList();
+        setMatchList(ignoreDaysAssignment);
+        setLogisticGroupList();
+
+        InitializeMatchDaysFactory initializeMatchDaysFactory = new InitializeMatchDaysFactory();
+        initializeMatchDaysFactory.initialize(solution);
+        setTeamAssignment(solution);
+        setArenaAssignment(solution);
+
+        return solution;
+    }
+
+    private void setDayList() {
+
+        List<Day> dayList = new ArrayList<>();
+        SeasonPeriodData seasonPeriod = view.getSeasonPeriod();
+        LocalDate since = seasonPeriod.getSince();
+        LocalDate till = seasonPeriod.getTill();
+        int Index = 0;
+        int actingIndex = 0;
+        Day previousDay = null;
+
+        for (LocalDate curDate = since; curDate.isBefore(till.plusDays(1)); curDate = curDate.plusDays(1)) {
+
+            Day day = new Day();
+            day.setId((long) Index);
+            day.setIndex(Index);
+            day.setDate(curDate);
+            day.setActiveFlag(true);
+            day.setFixingState(false);
+
+            if (seasonPeriod.getExcludedPeriods() != null) {
+                for (PeriodData period : seasonPeriod.getExcludedPeriods()) {
+                    if (isWithinRange(curDate, period.getSince(), period.getTill())) {
+                        day.setActiveFlag(false);
+                        break;
+                    }
+                }
+            }
+
+            if (day.getActiveFlag()) {
+                day.setActingIndex(actingIndex);
+                actingIndex++;
+            }
+
+            dayList.add(day);
+            if (previousDay != null) {
+                previousDay.setNextDay(day);
+            }
+
+            if (day.getActingIndex() == 0) {
+                for (MatchData match : view.getMatches()) {
+                    if (match.getDate() != null && match.getDate().equals(day.getDate())) {
+                        day.setFixingState(true);
+                    }
+                }
+            }
+
+            previousDay = day;
+            Index++;
+        }
+
+        solution.setDayList(dayList);
+    }
+
+    private void setTeamList() {
+
+        List<Team> teamList = new ArrayList<>();
+
+        if (view.getTeams() != null) {
+
+            Map<LocalDate, Day> localDateDayMap = new LinkedHashMap<>();
+            for (Day dayData : solution.getDayList()) {
+                localDateDayMap.put(dayData.getDate(), dayData);
+            }
+
+            for (TeamData teamData : view.getTeams()) {
+
+                Team team = new Team();
+                team.setId(teamData.getId());
+                team.setName(teamData.getName());
+                team.setDistanceToTeamMap(new HashMap<>());
+                team.setRegionType(teamData.getRegionType());
+
+                if (team.getName().equals("СПР") || team.getName().equals("ЦСК")) {
+                    team.setArenaId(1L);
+                } else {
+                    team.setArenaId(null);
+                }
+
+                /*
+                 * if(team.getName().equals("АМР") || team.getName().equals("АДМ") ) {
+                 * team.setRegionType(RegionType.FAR_EAST);
+                 * }
+                 * else if(team.getName().equals("СИБ") || team.getName().equals("БАР")) {
+                 * team.setRegionType(RegionType.SIBERIA);
+                 * }
+                 * else if(team.getName().equals("СЮЛ") || team.getName().equals("АВТ") || team.getName().equals("ТРК") ||
+                 * team.getName().equals("ММГ")) {
+                 * team.setRegionType(RegionType.URAL);
+                 * }
+                 * else {
+                 * team.setRegionType(RegionType.EUROPE);
+                 * }
+                 */
+
+                TreeMap<Day, MatchType> dayMatchTypeMap = new TreeMap<>();
+                if (teamData.getNoHomePeriods() != null) {
+                    for (PeriodData periodData : teamData.getNoHomePeriods().getPeriods()) {
+                        LocalDate since = periodData.getSince();
+                        LocalDate till = periodData.getTill();
+                        for (LocalDate curDate = since; curDate.isBefore(till.plusDays(1)); curDate = curDate.plusDays(1)) {
+                            dayMatchTypeMap.put(localDateDayMap.get(curDate), MatchType.AWAY);
+                        }
+                    }
+                }
+
+                if (teamData.getNoPeriods() != null) {
+                    for (PeriodData periodData : teamData.getNoPeriods().getPeriods()) {
+                        LocalDate since = periodData.getSince();
+                        LocalDate till = periodData.getTill();
+                        for (LocalDate curDate = since; curDate.isBefore(till.plusDays(1)); curDate = curDate.plusDays(1)) {
+                            dayMatchTypeMap.put(localDateDayMap.get(curDate), MatchType.NO_MATCH);
+                        }
+                    }
+                }
+                
+                TreeMap<Day, Period> periodByDayMap = new TreeMap<>();
+                Day previousDay = null;
+                Period period = null;
+                for(Day day : dayMatchTypeMap.keySet()) {
+                    
+                    if (previousDay == null ||
+                       (day.getIndex()-previousDay.getIndex() > 1) ||
+                       (dayMatchTypeMap.get(day) !=  dayMatchTypeMap.get(previousDay))) {
+                         
+                        period = new Period();
+                        period.setBeginDayIndex(day.getIndex());
+                        period.setEndDayIndex(day.getIndex());
+                        period.setPeriodType(dayMatchTypeMap.get(day));
+                     }
+                     else if (period != null) {
+                         period.setEndDayIndex(day.getIndex());
+                     }
+                    
+                    periodByDayMap.put(day, period);
+                    previousDay = day;
+                }
+                
+                team.setPeriodByDayMap(periodByDayMap);
+                teamList.add(team); 
+            }
+        }
+        
+        
+        if (view.getRoutes() != null) {
+            Map<Long, Team> idTeamMap = new LinkedHashMap<>();
+            for (Team teamData : teamList) {
+                idTeamMap.put(teamData.getId(), teamData);
+            }
+
+            for (RouteData routeData : view.getRoutes()) {
+                Team team1 = idTeamMap.get(routeData.getTeam1Id());
+                Team team2 = idTeamMap.get(routeData.getTeam2Id());
+
+                team1.getDistanceToTeamMap().put(team2, routeData.getDistance());
+                team2.getDistanceToTeamMap().put(team1, routeData.getDistance());
+            }
+        }
+
+        solution.setTeamList(teamList);
+    }
+
+    private void setMatchList(Boolean ignoreDaysAssignment) {
+
+        List<Match> matchList = new ArrayList<>();
+
+        if (solution.getTeamList() != null && solution.getDayList() != null && view.getMatches() != null) {
+
+            Map<Long, Team> idTeamMap = new LinkedHashMap<>();
+            for (Team team : solution.getTeamList()) {
+                idTeamMap.put(team.getId(), team);
+            }
+
+            Map<LocalDate, Day> dateDayMap = new LinkedHashMap<>();
+            for (Day day : solution.getDayList()) {
+                dateDayMap.put(day.getDate(), day);
+            }
+
+            Integer index = 0;
+            for (MatchData matchData : view.getMatches()) {
+                Match match = new Match();
+                match.setId(matchData.getId());
+                match.setIndex(index);
+                match.setHomeTeam(idTeamMap.get(matchData.getHomeTeamId()));
+                match.setAwayTeam(idTeamMap.get(matchData.getAwayTeamId()));
+
+                if (ignoreDaysAssignment == false || (matchData.getFixed() != null && matchData.getFixed() == 1)) {
+                    match.setDay(dateDayMap.get(matchData.getDate()));
+                }
+
+                match.setFixingState((matchData.getFixed() != null && matchData.getFixed() == 1) ? true : false);
+
+                // if(match.getHomeTeam().getRegionType() == RegionType.FAR_EAST && 
+                //         match.getAwayTeam().getRegionType() != RegionType.FAR_EAST ) {
+                matchList.add(match);
+
+                index++;
+                // }
+            }
+        }
+
+        solution.setMatchList(matchList);
+    }
+
+    private void setLogisticGroupList() {
+        List<LogisticGroup> logisticGroupList = new ArrayList<>();
+
+        for (LogisticGroupData LogisticGroupData : view.getLogisticGroups()) {
+            LogisticGroup logisticGroup = new LogisticGroup();
+            logisticGroup.setId(LogisticGroupData.getId());
+            logisticGroup.setName(LogisticGroupData.getName());
+            logisticGroup.setTeams(new ArrayList<Long>(LogisticGroupData.getTeams()));
+
+            logisticGroupList.add(logisticGroup);
+        }
+
+        solution.setLogisticGroupList(logisticGroupList);
+    }
+
+    /*
+     * private List<LogisticGroup> getDefaultLogisticGroups(List<Team> teamList){
+     * 
+     * Map<String, Long> teamNameIdMap = new HashMap<>();
+     * for (Team team : teamList) {
+     * teamNameIdMap.put(team.getName(), team.getId());
+     * }
+     * 
+     * List<LogisticGroup> logisticGroupList = new ArrayList<>();
+     * 
+     * LogisticGroup logisticGroup = new LogisticGroup();
+     * logisticGroup.setId(1L);
+     * logisticGroup.setName("Europe");
+     * List<Long> teamIdList = new ArrayList<>();
+     * teamIdList.add(teamNameIdMap.get("АВТ"));
+     * teamIdList.add(teamNameIdMap.get("АВГ"));
+     * teamIdList.add(teamNameIdMap.get("АКБ"));
+     * teamIdList.add(teamNameIdMap.get("ВИТ"));
+     * teamIdList.add(teamNameIdMap.get("ДИН"));
+     * teamIdList.add(teamNameIdMap.get("ДМН"));
+     * teamIdList.add(teamNameIdMap.get("ДРГ"));
+     * teamIdList.add(teamNameIdMap.get("ЙОК"));
+     * teamIdList.add(teamNameIdMap.get("КРС"));
+     * teamIdList.add(teamNameIdMap.get("ЛОК"));
+     * teamIdList.add(teamNameIdMap.get("ММГ"));
+     * teamIdList.add(teamNameIdMap.get("НХК"));
+     * teamIdList.add(teamNameIdMap.get("СЕВ"));
+     * teamIdList.add(teamNameIdMap.get("СКА"));
+     * teamIdList.add(teamNameIdMap.get("СОЧ"));
+     * teamIdList.add(teamNameIdMap.get("СПР"));
+     * teamIdList.add(teamNameIdMap.get("СЮЛ"));
+     * teamIdList.add(teamNameIdMap.get("ТОР"));
+     * teamIdList.add(teamNameIdMap.get("ТРК"));
+     * teamIdList.add(teamNameIdMap.get("ЦСК"));
+     * logisticGroup.setTeams(teamIdList);
+     * logisticGroupList.add(logisticGroup);
+     * 
+     * 
+     * logisticGroup = new LogisticGroup();
+     * logisticGroup.setId(2L);
+     * logisticGroup.setName("Europe+Siberia");
+     * teamIdList = new ArrayList<>();
+     * teamIdList.add(teamNameIdMap.get("АВТ"));
+     * teamIdList.add(teamNameIdMap.get("АВГ"));
+     * teamIdList.add(teamNameIdMap.get("АКБ"));
+     * teamIdList.add(teamNameIdMap.get("ВИТ"));
+     * teamIdList.add(teamNameIdMap.get("ДИН"));
+     * teamIdList.add(teamNameIdMap.get("КРС"));
+     * teamIdList.add(teamNameIdMap.get("ЛОК"));
+     * teamIdList.add(teamNameIdMap.get("ММГ"));
+     * teamIdList.add(teamNameIdMap.get("НХК"));
+     * teamIdList.add(teamNameIdMap.get("СЕВ"));
+     * teamIdList.add(teamNameIdMap.get("СПР"));
+     * teamIdList.add(teamNameIdMap.get("СЮЛ"));
+     * teamIdList.add(teamNameIdMap.get("ТОР"));
+     * teamIdList.add(teamNameIdMap.get("ТРК"));
+     * teamIdList.add(teamNameIdMap.get("ЦСК"));
+     * teamIdList.add(teamNameIdMap.get("БАР"));
+     * teamIdList.add(teamNameIdMap.get("СИБ"));
+     * logisticGroup.setTeams(teamIdList);
+     * logisticGroupList.add(logisticGroup);
+     * 
+     * logisticGroup = new LogisticGroup();
+     * logisticGroup.setId(3L);
+     * logisticGroup.setName("Far_East_1");
+     * teamIdList = new ArrayList<>();
+     * teamIdList.add(teamNameIdMap.get("СИБ"));
+     * teamIdList.add(teamNameIdMap.get("АМР"));
+     * teamIdList.add(teamNameIdMap.get("АДМ"));
+     * logisticGroup.setTeams(teamIdList);
+     * logisticGroupList.add(logisticGroup);
+     * 
+     * logisticGroup = new LogisticGroup();
+     * logisticGroup.setId(4L);
+     * logisticGroup.setName("Far_East_2");
+     * teamIdList = new ArrayList<>();
+     * teamIdList.add(teamNameIdMap.get("БАР"));
+     * teamIdList.add(teamNameIdMap.get("АМР"));
+     * teamIdList.add(teamNameIdMap.get("АДМ"));
+     * logisticGroup.setTeams(teamIdList);
+     * logisticGroupList.add(logisticGroup);
+     * 
+     * 
+     * return logisticGroupList;
+     * }
+     */
+
+    private Boolean isWithinRange(LocalDate date, LocalDate since, LocalDate till) {
+
+        Boolean result = false;
+
+        if (date.isEqual(since) || date.isEqual(till) || (date.isAfter(since) && date.isBefore(till))) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    private void setTeamAssignment(TravelingTournament solution) {
+
+        Map<Long, TeamAssignment> teamAssignmentMap = new HashMap<>();
+
+        for (Team team : solution.getTeamList()) {
+            TeamAssignment teamAssignment = new TeamAssignment();
+            teamAssignment.setId(team.getId());
+            teamAssignmentMap.put(team.getId(), teamAssignment);
+        }
+
+        for (Match match : solution.getMatchList()) {
+            TeamAssignment teamAssignment = teamAssignmentMap.get(match.getHomeTeam().getId());
+            teamAssignment.setMatch(match);
+            teamAssignment = teamAssignmentMap.get(match.getAwayTeam().getId());
+            teamAssignment.setMatch(match);
+        }
+
+        List<TeamAssignment> teamAssignmentList = new ArrayList<>();
+
+        for (TeamAssignment teamAssignment : teamAssignmentMap.values()) {
+            teamAssignmentList.add(teamAssignment);
+        }
+
+        solution.setTeamAssignmentList(teamAssignmentList);
+    }
+
+    private void setArenaAssignment(TravelingTournament solution) {
+
+        ArenaAssignment arenaAssignment = new ArenaAssignment();
+        arenaAssignment.setId(1L);
+
+        for (Match match : solution.getMatchList()) {
+
+            if (match.getHomeTeam().getArenaId() != null && match.getHomeTeam().getArenaId() == 1L) {
+                arenaAssignment.setMatch(match);
+            }
+        }
+
+        solution.setArenaAssignment(arenaAssignment);
+    }
+
+}

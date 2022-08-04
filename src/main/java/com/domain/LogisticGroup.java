@@ -1,0 +1,32 @@
+package com.domain;
+
+import java.util.List;
+
+import com.common.domain.AbstractPersistable;
+
+public class LogisticGroup extends AbstractPersistable {
+
+    private String name;
+    private List<Long> teams;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTeams(List<Long> teams) {
+        this.teams = teams;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Long> getTeams() {
+        return teams;
+    }
+
+    public int size() {
+        return 0;
+    }
+
+}

@@ -1,0 +1,520 @@
+<TravelingTournament id="1">
+  <id>1</id>
+  <dayList id="2">
+    <TtpDay id="3">
+      <id>0</id>
+      <date>2018-09-01</date>
+      <index>0</index>
+      <activeFlag>false</activeFlag>
+      <nextDay id="4">
+        <id>1</id>
+        <date>2018-09-02</date>
+        <index>1</index>
+        <activeFlag>true</activeFlag>
+        <nextDay id="5">
+          <id>2</id>
+          <date>2018-09-03</date>
+          <index>2</index>
+          <activeFlag>true</activeFlag>
+          <nextDay id="6">
+            <id>3</id>
+            <date>2018-09-04</date>
+            <index>3</index>
+            <activeFlag>true</activeFlag>
+            <nextDay id="7">
+              <id>4</id>
+              <date>2018-09-05</date>
+              <index>4</index>
+              <activeFlag>true</activeFlag>
+              <nextDay id="8">
+                <id>5</id>
+                <date>2018-09-06</date>
+                <index>5</index>
+                <activeFlag>true</activeFlag>
+                <nextDay id="9">
+                  <id>6</id>
+                  <date>2018-09-07</date>
+                  <index>6</index>
+                  <activeFlag>true</activeFlag>
+                  <nextDay id="10">
+                    <id>7</id>
+                    <date>2018-09-08</date>
+                    <index>7</index>
+                    <activeFlag>true</activeFlag>
+                    <nextDay id="11">
+                      <id>8</id>
+                      <date>2018-09-09</date>
+                      <index>8</index>
+                      <activeFlag>true</activeFlag>
+                      <nextDay id="12">
+                        <id>9</id>
+                        <date>2018-09-10</date>
+                        <index>9</index>
+                        <activeFlag>true</activeFlag>
+                        <nextDay id="13">
+                          <id>10</id>
+                          <date>2018-09-11</date>
+                          <index>10</index>
+                          <activeFlag>true</activeFlag>
+                          <nextDay id="14">
+                            <id>11</id>
+                            <date>2018-09-12</date>
+                            <index>11</index>
+                            <activeFlag>true</activeFlag>
+                            <nextDay id="15">
+                              <id>12</id>
+                              <date>2018-09-13</date>
+                              <index>12</index>
+                              <activeFlag>true</activeFlag>
+                              <nextDay id="16">
+                                <id>13</id>
+                                <date>2018-09-14</date>
+                                <index>13</index>
+                                <activeFlag>true</activeFlag>
+                                <nextDay id="17">
+                                  <id>14</id>
+                                  <date>2018-09-15</date>
+                                  <index>14</index>
+                                  <activeFlag>true</activeFlag>
+                                  <nextDay id="18">
+                                    <id>15</id>
+                                    <date>2018-09-16</date>
+                                    <index>15</index>
+                                    <activeFlag>true</activeFlag>
+                                    <nextDay id="19">
+                                      <id>16</id>
+                                      <date>2018-09-17</date>
+                                      <index>16</index>
+                                      <activeFlag>true</activeFlag>
+                                      <nextDay id="20">
+                                        <id>17</id>
+                                        <date>2018-09-18</date>
+                                        <index>17</index>
+                                        <activeFlag>true</activeFlag>
+                                        <nextDay id="21">
+                                          <id>18</id>
+                                          <date>2018-09-19</date>
+                                          <index>18</index>
+                                          <activeFlag>true</activeFlag>
+                                          <nextDay id="22">
+                                            <id>19</id>
+                                            <date>2018-09-20</date>
+                                            <index>19</index>
+                                            <activeFlag>true</activeFlag>
+                                            <nextDay id="23">
+                                              <id>20</id>
+                                              <date>2018-09-21</date>
+                                              <index>20</index>
+                                              <activeFlag>true</activeFlag>
+                                              <nextDay id="24">
+                                                <id>21</id>
+                                                <date>2018-09-22</date>
+                                                <index>21</index>
+                                                <activeFlag>true</activeFlag>
+                                                <nextDay id="25">
+                                                  <id>22</id>
+                                                  <date>2018-09-23</date>
+                                                  <index>22</index>
+                                                  <activeFlag>true</activeFlag>
+                                                  <nextDay id="26">
+                                                    <id>23</id>
+                                                    <date>2018-09-24</date>
+                                                    <index>23</index>
+                                                    <activeFlag>true</activeFlag>
+                                                    <nextDay id="27">
+                                                      <id>24</id>
+                                                      <date>2018-09-25</date>
+                                                      <index>24</index>
+                                                      <activeFlag>false</activeFlag>
+                                                      <nextDay id="28">
+                                                        <id>25</id>
+                                                        <date>2018-09-26</date>
+                                                        <index>25</index>
+                                                        <activeFlag>false</activeFlag>
+                                                        <nextDay id="29">
+                                                          <id>26</id>
+                                                          <date>2018-09-27</date>
+                                                          <index>26</index>
+                                                          <activeFlag>false</activeFlag>
+                                                          <nextDay id="30">
+                                                            <id>27</id>
+                                                            <date>2018-09-28</date>
+                                                            <index>27</index>
+                                                            <activeFlag>false</activeFlag>
+                                                            <nextDay id="31">
+                                                              <id>28</id>
+                                                              <date>2018-09-29</date>
+                                                              <index>28</index>
+                                                              <activeFlag>false</activeFlag>
+                                                              <nextDay id="32">
+                                                                <id>29</id>
+                                                                <date>2018-09-30</date>
+                                                                <index>29</index>
+                                                                <activeFlag>false</activeFlag>
+                                                              </nextDay>
+                                                            </nextDay>
+                                                          </nextDay>
+                                                        </nextDay>
+                                                      </nextDay>
+                                                    </nextDay>
+                                                  </nextDay>
+                                                </nextDay>
+                                              </nextDay>
+                                            </nextDay>
+                                          </nextDay>
+                                        </nextDay>
+                                      </nextDay>
+                                    </nextDay>
+                                  </nextDay>
+                                </nextDay>
+                              </nextDay>
+                            </nextDay>
+                          </nextDay>
+                        </nextDay>
+                      </nextDay>
+                    </nextDay>
+                  </nextDay>
+                </nextDay>
+              </nextDay>
+            </nextDay>
+          </nextDay>
+        </nextDay>
+      </nextDay>
+    </TtpDay>
+    <TtpDay reference="4"/>
+    <TtpDay reference="5"/>
+    <TtpDay reference="6"/>
+    <TtpDay reference="7"/>
+    <TtpDay reference="8"/>
+    <TtpDay reference="9"/>
+    <TtpDay reference="10"/>
+    <TtpDay reference="11"/>
+    <TtpDay reference="12"/>
+    <TtpDay reference="13"/>
+    <TtpDay reference="14"/>
+    <TtpDay reference="15"/>
+    <TtpDay reference="16"/>
+    <TtpDay reference="17"/>
+    <TtpDay reference="18"/>
+    <TtpDay reference="19"/>
+    <TtpDay reference="20"/>
+    <TtpDay reference="21"/>
+    <TtpDay reference="22"/>
+    <TtpDay reference="23"/>
+    <TtpDay reference="24"/>
+    <TtpDay reference="25"/>
+    <TtpDay reference="26"/>
+    <TtpDay reference="27"/>
+    <TtpDay reference="28"/>
+    <TtpDay reference="29"/>
+    <TtpDay reference="30"/>
+    <TtpDay reference="31"/>
+    <TtpDay reference="32"/>
+  </dayList>
+  <teamList id="33">
+    <TtpTeam id="34">
+      <id>1</id>
+      <name>АВГ</name>
+      <distanceToTeamMap id="35">
+        <entry>
+          <TtpTeam id="36">
+            <id>3</id>
+            <name>АДМ</name>
+            <distanceToTeamMap id="37">
+              <entry>
+                <TtpTeam id="38">
+                  <id>2</id>
+                  <name>АВТ</name>
+                  <distanceToTeamMap id="39">
+                    <entry>
+                      <TtpTeam reference="36"/>
+                      <int>40</int>
+                    </entry>
+                    <entry>
+                      <TtpTeam id="40">
+                        <id>4</id>
+                        <name>АКБ</name>
+                        <distanceToTeamMap id="41">
+                          <entry>
+                            <TtpTeam reference="36"/>
+                            <int>60</int>
+                          </entry>
+                          <entry>
+                            <TtpTeam reference="38"/>
+                            <int>50</int>
+                          </entry>
+                          <entry>
+                            <TtpTeam reference="34"/>
+                            <int>30</int>
+                          </entry>
+                        </distanceToTeamMap>
+                        <matchTypeByDayMap class="linked-hash-map" id="42"/>
+                      </TtpTeam>
+                      <int>50</int>
+                    </entry>
+                    <entry>
+                      <TtpTeam reference="34"/>
+                      <int>10</int>
+                    </entry>
+                  </distanceToTeamMap>
+                  <matchTypeByDayMap class="linked-hash-map" id="43"/>
+                </TtpTeam>
+                <int>40</int>
+              </entry>
+              <entry>
+                <TtpTeam reference="40"/>
+                <int>60</int>
+              </entry>
+              <entry>
+                <TtpTeam reference="34"/>
+                <int>20</int>
+              </entry>
+            </distanceToTeamMap>
+            <matchTypeByDayMap class="linked-hash-map" id="44"/>
+          </TtpTeam>
+          <int>20</int>
+        </entry>
+        <entry>
+          <TtpTeam reference="38"/>
+          <int>10</int>
+        </entry>
+        <entry>
+          <TtpTeam reference="40"/>
+          <int>30</int>
+        </entry>
+      </distanceToTeamMap>
+      <matchTypeByDayMap class="linked-hash-map" id="45">
+        <entry>
+          <TtpDay reference="7"/>
+          <domain.MatchType>AWAY</domain.MatchType>
+        </entry>
+        <entry>
+          <TtpDay reference="9"/>
+          <domain.MatchType>AWAY</domain.MatchType>
+        </entry>
+        <entry>
+          <TtpDay reference="10"/>
+          <domain.MatchType>AWAY</domain.MatchType>
+        </entry>
+      </matchTypeByDayMap>
+    </TtpTeam>
+    <TtpTeam reference="38"/>
+    <TtpTeam reference="36"/>
+    <TtpTeam reference="40"/>
+  </teamList>
+  <matchList id="46">
+    <TtpMatch id="47">
+      <id>0</id>
+      <homeTeamNextMatchId>2</homeTeamNextMatchId>
+      <awayTeamNextMatchId>7</awayTeamNextMatchId>
+      <homeTeam reference="34"/>
+      <awayTeam reference="38"/>
+      <day reference="6"/>
+    </TtpMatch>
+    <TtpMatch id="48">
+      <id>1</id>
+      <homeTeamNextMatchId>3</homeTeamNextMatchId>
+      <awayTeamNextMatchId>8</awayTeamNextMatchId>
+      <homeTeam reference="34"/>
+      <awayTeam reference="36"/>
+      <day reference="8"/>
+    </TtpMatch>
+    <TtpMatch id="49">
+      <id>2</id>
+      <homeTeamNextMatchId>1</homeTeamNextMatchId>
+      <awayTeamNextMatchId>5</awayTeamNextMatchId>
+      <homeTeam reference="34"/>
+      <awayTeam reference="40"/>
+      <day reference="7"/>
+    </TtpMatch>
+    <TtpMatch id="50">
+      <id>3</id>
+      <homeTeam reference="38"/>
+      <awayTeam reference="34"/>
+      <day reference="9"/>
+    </TtpMatch>
+    <TtpMatch id="51">
+      <id>4</id>
+      <homeTeamNextMatchId>10</homeTeamNextMatchId>
+      <awayTeamNextMatchId>6</awayTeamNextMatchId>
+      <homeTeam reference="38"/>
+      <awayTeam reference="36"/>
+      <day reference="4"/>
+    </TtpMatch>
+    <TtpMatch id="52">
+      <id>5</id>
+      <homeTeamNextMatchId>3</homeTeamNextMatchId>
+      <awayTeamNextMatchId>8</awayTeamNextMatchId>
+      <homeTeam reference="38"/>
+      <awayTeam reference="40"/>
+      <day reference="8"/>
+    </TtpMatch>
+    <TtpMatch id="53">
+      <id>6</id>
+      <homeTeamNextMatchId>11</homeTeamNextMatchId>
+      <awayTeamNextMatchId>0</awayTeamNextMatchId>
+      <homeTeam reference="36"/>
+      <awayTeam reference="34"/>
+      <day reference="5"/>
+    </TtpMatch>
+    <TtpMatch id="54">
+      <id>7</id>
+      <homeTeamNextMatchId>1</homeTeamNextMatchId>
+      <awayTeamNextMatchId>5</awayTeamNextMatchId>
+      <homeTeam reference="36"/>
+      <awayTeam reference="38"/>
+      <day reference="7"/>
+    </TtpMatch>
+    <TtpMatch id="55">
+      <id>8</id>
+      <homeTeam reference="36"/>
+      <awayTeam reference="40"/>
+      <day reference="9"/>
+    </TtpMatch>
+    <TtpMatch id="56">
+      <id>9</id>
+      <homeTeamNextMatchId>10</homeTeamNextMatchId>
+      <awayTeamNextMatchId>6</awayTeamNextMatchId>
+      <homeTeam reference="40"/>
+      <awayTeam reference="34"/>
+      <day reference="4"/>
+    </TtpMatch>
+    <TtpMatch id="57">
+      <id>10</id>
+      <homeTeamNextMatchId>11</homeTeamNextMatchId>
+      <awayTeamNextMatchId>0</awayTeamNextMatchId>
+      <homeTeam reference="40"/>
+      <awayTeam reference="38"/>
+      <day reference="5"/>
+    </TtpMatch>
+    <TtpMatch id="58">
+      <id>11</id>
+      <homeTeamNextMatchId>2</homeTeamNextMatchId>
+      <awayTeamNextMatchId>7</awayTeamNextMatchId>
+      <homeTeam reference="40"/>
+      <awayTeam reference="36"/>
+      <day reference="6"/>
+    </TtpMatch>
+  </matchList>
+  <teamAssignment id="59">
+    <id>1</id>
+    <teamIndex id="60">
+      <entry>
+        <long>1</long>
+        <tree-map id="61">
+          <entry>
+            <int>1</int>
+            <TtpMatch reference="56"/>
+          </entry>
+          <entry>
+            <int>2</int>
+            <TtpMatch reference="53"/>
+          </entry>
+          <entry>
+            <int>3</int>
+            <TtpMatch reference="47"/>
+          </entry>
+          <entry>
+            <int>4</int>
+            <TtpMatch reference="49"/>
+          </entry>
+          <entry>
+            <int>5</int>
+            <TtpMatch reference="48"/>
+          </entry>
+          <entry>
+            <int>6</int>
+            <TtpMatch reference="50"/>
+          </entry>
+        </tree-map>
+      </entry>
+      <entry>
+        <long>2</long>
+        <tree-map id="62">
+          <entry>
+            <int>1</int>
+            <TtpMatch reference="51"/>
+          </entry>
+          <entry>
+            <int>2</int>
+            <TtpMatch reference="57"/>
+          </entry>
+          <entry>
+            <int>3</int>
+            <TtpMatch reference="47"/>
+          </entry>
+          <entry>
+            <int>4</int>
+            <TtpMatch reference="54"/>
+          </entry>
+          <entry>
+            <int>5</int>
+            <TtpMatch reference="52"/>
+          </entry>
+          <entry>
+            <int>6</int>
+            <TtpMatch reference="50"/>
+          </entry>
+        </tree-map>
+      </entry>
+      <entry>
+        <long>3</long>
+        <tree-map id="63">
+          <entry>
+            <int>1</int>
+            <TtpMatch reference="51"/>
+          </entry>
+          <entry>
+            <int>2</int>
+            <TtpMatch reference="53"/>
+          </entry>
+          <entry>
+            <int>3</int>
+            <TtpMatch reference="58"/>
+          </entry>
+          <entry>
+            <int>4</int>
+            <TtpMatch reference="54"/>
+          </entry>
+          <entry>
+            <int>5</int>
+            <TtpMatch reference="48"/>
+          </entry>
+          <entry>
+            <int>6</int>
+            <TtpMatch reference="55"/>
+          </entry>
+        </tree-map>
+      </entry>
+      <entry>
+        <long>4</long>
+        <tree-map id="64">
+          <entry>
+            <int>1</int>
+            <TtpMatch reference="56"/>
+          </entry>
+          <entry>
+            <int>2</int>
+            <TtpMatch reference="57"/>
+          </entry>
+          <entry>
+            <int>3</int>
+            <TtpMatch reference="58"/>
+          </entry>
+          <entry>
+            <int>4</int>
+            <TtpMatch reference="49"/>
+          </entry>
+          <entry>
+            <int>5</int>
+            <TtpMatch reference="52"/>
+          </entry>
+          <entry>
+            <int>6</int>
+            <TtpMatch reference="55"/>
+          </entry>
+        </tree-map>
+      </entry>
+    </teamIndex>
+  </teamAssignment>
+</TravelingTournament>

@@ -1,0 +1,91 @@
+package com.score.teamConstraints;
+
+import com.domain.ConstraintSettings;
+import com.solver.seria.Seria;
+import com.domain.MatchType;
+import com.domain.Team;
+import com.score.constraintModel.ForgivenScores;
+import com.score.constraintModel.ScoreElement;
+
+public class SeriaLengthConstraint extends Constraint {
+
+    private ForgivenScores forgivenScores;
+    private Integer minSeriaLengthParam;
+    private Integer maxSeriaLengthParam;
+    
+    private int excParamMinConsecutiveHomeNa;
+    private int excParamMaxSeriaLength;
+    
+    
+    
+    public SeriaLengthConstraint(Boolean keepScoreElement, ForgivenScores forgivenScores) {
+        super(7L, "SeriaLength", true, 1, keepScoreElement);
+        this.forgivenScores = forgivenScores;
+        minSeriaLengthParam = 2;
+        maxSeriaLengthParam = 4;
+        excParamMinConsecutiveHomeNa = 10;
+        excParamMaxSeriaLength = 5;
+    }
+
+
+    public void insert(Team team, Seria seria) {
+
+        if (active == true) {
+            
+            //tmp
+            if(team.getName().equals("АДМ") && seria.getFirstMatch().getAnotherTeam(team).getName().equals("ДРГ") 
+                    && seria.getFirstMatch().getDay().getIndex() == 1) {
+                int j;
+                j = 1;
+            }
+            
+            Integer seriaLength = seria.getSeriaLength();
+            
+            int consecutiveHomeNa = 0;
+            if(seria.getSeriaType() == MatchType.AWAY) {
+                consecutiveHomeNa = team.getLenConsecutiveHomeNA(seria.getFirstMatch().getDay(), seria.getLastMatch().getDay());
+            }    
+            
+            if(seriaLength > maxSeriaLengthParam && seriaLength <= excParamMaxSeriaLength && consecutiveHomeNa >= excParamMinConsecutiveHomeNa) {
+                setExceptionalPenalty((seriaLength - maxSeriaLengthParam) * penaltyValue, seria);
+            }
+            else if (seriaLength < minSeriaLengthParam) {
+                this.setPenalty(penaltyValue, seria, null);
+            } 
+            else if (seriaLength > maxSeriaLengthParam) {
+                this.setPenalty((seriaLength - maxSeriaLengthParam) * penaltyValue, seria, null);
+            }
+        }
+    }
+    
+    
+    public void setExceptionalPenalty(Integer penalty, Seria seria) {
+        boolean doSwitch = keepScoreElement?false:true;
+        keepScoreElement = true;
+        
+        this.setPenalty(penalty, seria, null);
+        ScoreElement scoreElement =  score.getScoreElementList().get(score.getScoreElementList().size()-1);
+        forgivenScores.setCandidate(seria.getMatchTypeSequenceId(), scoreElement);
+        
+        keepScoreElement = doSwitch?false:true;
+    }
+    
+    @Override 
+    public void setConstraintSettings(ConstraintSettings constraintSettings) {
+        super.setConstraintSettings(constraintSettings);
+        minSeriaLengthParam = Integer.parseInt(constraintSettings.getProperty("minSeriaLengthParam"));
+        maxSeriaLengthParam = Integer.parseInt(constraintSettings.getProperty("maxSeriaLengthParam"));
+        excParamMinConsecutiveHomeNa = Integer.parseInt(constraintSettings.getProperty("excParamMinConsecutiveHomeNa"));
+        excParamMaxSeriaLength = Integer.parseInt(constraintSettings.getProperty("excParamMaxSeriaLength"));
+    }
+    
+    @Override
+    public ConstraintSettings getConstraintSettings() {
+        ConstraintSettings constraintSettings = super.getConstraintSettings();
+        constraintSettings.setProperty("minSeriaLengthParam", minSeriaLengthParam);
+        constraintSettings.setProperty("maxSeriaLengthParam", maxSeriaLengthParam);
+        constraintSettings.setProperty("excParamMinConsecutiveHomeNa", excParamMinConsecutiveHomeNa);
+        constraintSettings.setProperty("excParamMaxSeriaLength", excParamMaxSeriaLength);
+        return constraintSettings;
+    }
+}

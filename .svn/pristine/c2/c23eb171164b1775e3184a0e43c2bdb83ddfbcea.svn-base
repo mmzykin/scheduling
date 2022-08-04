@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+  <environmentMode>NON_REPRODUCIBLE</environmentMode>
+    <moveThreadCount>AUTO</moveThreadCount>
+ 
+  <solutionClass>com.domain.TravelingTournament</solutionClass>
+  <entityClass>com.domain.Match</entityClass>
+  <entityClass>com.domain.TeamAssignment</entityClass>
+  <entityClass>com.domain.ArenaAssignment</entityClass>
+  	
+  <scoreDirectorFactory>
+    <!--<scoreDrl>com/solver/travelingTournamentScoreRules.drl</scoreDrl>-->
+     <incrementalScoreCalculatorClass>com.score.TravelingTournamentIncrementalScoreCalculator</incrementalScoreCalculatorClass>
+  </scoreDirectorFactory>
+  
+  <termination>
+    <terminationClass>com.solver.termination.CustomTermination</terminationClass>
+    
+    <customProperties>
+		<MyCacheSize>7</MyCacheSize>
+	</customProperties>
+	
+  </termination>
+  
+
+  <localSearch>
+    <unionMoveSelector>
+	  <swapMoveSelector>
+   	  <cacheType>STEP</cacheType>
+      <selectionOrder>SHUFFLED</selectionOrder>  <!-- TODO with no acceptedCountLimit this should be ORIGINAL -->
+        <filterClass>com.solver.move.factory.InverseMatchSwapMoveFilter</filterClass>
+      </swapMoveSelector>	
+      <moveListFactory>
+        <cacheType>STEP</cacheType>
+        <selectionOrder>SHUFFLED</selectionOrder> <!-- TODO with no acceptedCountLimit this should be ORIGINAL -->
+        <moveListFactoryClass>com.solver.move.factory.MatchChainRotationsMoveFactory</moveListFactoryClass>
+      </moveListFactory>
+    </unionMoveSelector>
+    <acceptor>
+    	<simulatedAnnealingStartingTemperature>2hard/20000soft</simulatedAnnealingStartingTemperature>
+  		<moveTabuSize>30</moveTabuSize>
+    </acceptor>
+    
+    <forager>
+       <acceptedCountLimit>4</acceptedCountLimit>
+    </forager>
+  </localSearch>
+  
+</solver>
