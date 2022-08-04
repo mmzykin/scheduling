@@ -65,53 +65,6 @@ public class ScheduleRepairApp {
                 rescheduleMatches.add(match);                
             }
         }
-        
-        //Получить стартовую оценку расписани (матчи которые подлежат переназначению - не учитываются)
-        
-    //     //Здесь пример того, как для матча можно проверить в какой день чемпионата его можно поместить
-    //     List<List<Integer>> diffsByMatchList = new ArrayList<>();
-    //     for(Day day : solution.getDayList()) {
-    //         for (Match match : rescheduleMatches) {
-                
-    //             boolean checkStatus =  Modificator.checkDate(solution, match, day);
-    //             if (checkStatus) {
-    //                 Modificator.setDate(solution, match, day);
-    //                 HardSoftScore newScore = rater.calculateScore(solution);
-    //                 int diff = newScore.getHardScore() - startScore.getHardScore();
-    //                 diffsByMatchList.add(new ArrayList<Integer>());
-    //                 diffsByMatchList.s  
-    //         }
-    //     }
-    // }
-    // create entity of idMatchCollection class and fill it with data
-    // idMatchCollection _idMatchCollection = new idMatchCollection();
-    // for (Match match : rescheduleMatches){
-    //     for (Day day : solution.getDayList()) {
-    //         if (Modificator.checkDate(solution, match, day)) {
-    //             Modificator.setDate(solution, match, day);
-    //             HardSoftScore newScore = rater.calculateScore(solution);
-    //             long diff = (long) newScore.getHardScore() - (long) startScore.getHardScore();
-    //             // add map of Day to diff to idMatchCollection with key = id of match
-    //             _idMatchCollection.add(match.getId(), day, diff);
-    //         }
-    //     }
-    // }
-    // // make another entity of idMatchCollection 
-    // idMatchCollection _idMatchCollectionMins = new idMatchCollection();
-    // // make function to search for the smallest diff in idMatchCollection
-    // for (Match match : rescheduleMatches){
-    //     long min = Long.MAX_VALUE;
-    //     Day day = null;
-    //     for (Day day_ : solution.getDayList()) {
-    //         if (_idMatchCollection.get(match.getId(), day_) < min) {
-    //             min = _idMatchCollection.get(match.getId(), day_);
-    //             day = day_;
-    //         }
-    //     }
-    //     // add map of Day to diff to idMatchCollectionMins with key = id of match
-    //     _idMatchCollectionMins.add(match.getId(), day, min);
-    //     }
-    //     // check if there are matches with the same diff and 
     while (!rescheduleMatches.isEmpty()){
         MatchDayDiffCount besMatchDayDiffCount = new MatchDayDiffCount();
         HardSoftScore startScore = rater.calculateScore(solution);
