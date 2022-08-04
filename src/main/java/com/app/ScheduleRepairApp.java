@@ -18,6 +18,8 @@ import com.persistence.XStreamTravelingTournamentFileIO;
 import com.scheduleRepairMisc.Modificator;
 import com.scheduleRepairMisc.Rater;
 import com.app.idMatchCollection;
+
+import com.app.MatchDayDiffCount;
 /*import org.optaplanner.persistence.common.api.domain.solution.SolutionFileIO;
 
 import com.common.app.CommonApp;
@@ -65,7 +67,6 @@ public class ScheduleRepairApp {
         }
         
         //Получить стартовую оценку расписани (матчи которые подлежат переназначению - не учитываются)
-        HardSoftScore startScore = rater.calculateScore(solution);
         
     //     //Здесь пример того, как для матча можно проверить в какой день чемпионата его можно поместить
     //     List<List<Integer>> diffsByMatchList = new ArrayList<>();
@@ -83,33 +84,63 @@ public class ScheduleRepairApp {
     //     }
     // }
     // create entity of idMatchCollection class and fill it with data
-    idMatchCollection _idMatchCollection = new idMatchCollection();
-    for (Match match : rescheduleMatches){
-        for (Day day : solution.getDayList()) {
-            if (Modificator.checkDate(solution, match, day)) {
-                Modificator.setDate(solution, match, day);
-                HardSoftScore newScore = rater.calculateScore(solution);
-                long diff = (long) newScore.getHardScore() - (long) startScore.getHardScore();
-                // add map of Day to diff to idMatchCollection with key = id of match
-                _idMatchCollection.add(match.getId(), day, diff);
+    // idMatchCollection _idMatchCollection = new idMatchCollection();
+    // for (Match match : rescheduleMatches){
+    //     for (Day day : solution.getDayList()) {
+    //         if (Modificator.checkDate(solution, match, day)) {
+    //             Modificator.setDate(solution, match, day);
+    //             HardSoftScore newScore = rater.calculateScore(solution);
+    //             long diff = (long) newScore.getHardScore() - (long) startScore.getHardScore();
+    //             // add map of Day to diff to idMatchCollection with key = id of match
+    //             _idMatchCollection.add(match.getId(), day, diff);
+    //         }
+    //     }
+    // }
+    // // make another entity of idMatchCollection 
+    // idMatchCollection _idMatchCollectionMins = new idMatchCollection();
+    // // make function to search for the smallest diff in idMatchCollection
+    // for (Match match : rescheduleMatches){
+    //     long min = Long.MAX_VALUE;
+    //     Day day = null;
+    //     for (Day day_ : solution.getDayList()) {
+    //         if (_idMatchCollection.get(match.getId(), day_) < min) {
+    //             min = _idMatchCollection.get(match.getId(), day_);
+    //             day = day_;
+    //         }
+    //     }
+    //     // add map of Day to diff to idMatchCollectionMins with key = id of match
+    //     _idMatchCollectionMins.add(match.getId(), day, min);
+    //     }
+    //     // check if there are matches with the same diff and 
+    MatchDayDiffCount besMatchDayDiffCount = new MatchDayDiffCount();
+    while (!rescheduleMatches.isEmpty()){
+        HardSoftScore startScore = rater.calculateScore(solution);
+        for (Match match : rescheduleMatches){
+            MatchDayDiffCount currentMatchDayDiffCount = new MatchDayDiffCount( match, null, Integer.MAX_VALUE, 0);
+            for (Day day : solution.getDayList()) {
+                if (Modificator.checkDate(solution, match, day)) {
+                    Modificator.setDate(solution, match, day);
+                    HardSoftScore newScore = rater.calculateScore(solution);
+                    Integer diff = (Integer) newScore.getHardScore() - (Integer) startScore.getHardScore();
+                    if (diff < currentMatchDayDiffCount.getDayDiff()) {
+                        currentMatchDayDiffCount.setDayDiff(diff);
+                        currentMatchDayDiffCount.setDay(day);
+                    }
+                }
+                currentMatchDayDiffCount.countVars++;
+            }
+            if (currentMatchDayDiffCount.getDayDiff() < besMatchDayDiffCount.getDayDiff()) {
+                besMatchDayDiffCount = currentMatchDayDiffCount;
+            }
+            else if (currentMatchDayDiffCount.getDayDiff() == besMatchDayDiffCount.getDayDiff()) {
+                if (currentMatchDayDiffCount.getCountVars() < besMatchDayDiffCount.getCountVars()) {
+                    besMatchDayDiffCount = currentMatchDayDiffCount;
+                }
             }
         }
-    }
-    // make another entity of idMatchCollection 
-    idMatchCollection _idMatchCollectionMins = new idMatchCollection();
-    // make function to search for the smallest diff in idMatchCollection
-    for (Match match : rescheduleMatches){
-        long min = Long.MAX_VALUE;
-        Day day = null;
-        for (Day day_ : solution.getDayList()) {
-            if (_idMatchCollection.get(match.getId(), day_) < min) {
-                min = _idMatchCollection.get(match.getId(), day_);
-                day = day_;
-            }
+        Modificator.setDate(solution, besMatchDayDiffCount.getMatch(), besMatchDayDiffCount.getDay());
+        rescheduleMatches.remove(besMatchDayDiffCount.getMatch());
+        System.out.println(rescheduleMatches.size());
         }
-        // add map of Day to diff to idMatchCollectionMins with key = id of match
-        _idMatchCollectionMins.add(match.getId(), day, min);
-        }
-    }
-     
+    }     
 }

@@ -10,85 +10,95 @@ import java.util.HashMap;
 import com.domain.Day;
 import com.domain.LogisticGroup;
 
-public class idMatchMapClass {
-    List<Map<Day, Integer>> idMatchMap;
-    public idMatchMapClass(List<Map<Day, Integer>> idMatchMap) {
-        this.idMatchMap = idMatchMap;
+public class idMatchCollection{
+    Map<Long, Map<Day, Long>> idMatchCollection;
+    public idMatchCollection(){
+        idMatchCollection = new HashMap<>();
     }
-
-    public void add (int _match, Day _day, Integer _delta){
-        if (idMatchMap.contains(_match))
-        {
-            idMatchMap.get(_match).put(_day, _delta);
+    public void add(Long id, Day day, Long matchId){
+        if(!idMatchCollection.containsKey(id)){
+            idMatchCollection.put(id, new HashMap<>());
         }
-        else {
-            Map<Day, Integer> _temporary = new HashMap<>();
-            _temporary.put(_day, _delta);
-            idMatchMap.add(_temporary);
-        }
-        
-    } 
-    public idMatchMapClass() {
-        idMatchMap = new ArrayList<Map<Day,Integer>>(); 
+        idMatchCollection.get(id).put(day, matchId);
     }
-    Integer id;    
-    public Integer getId() {
-        return id;
-    }
-    
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    
-    public List<Map<Day, Integer>> getIdMatchMap() {
-        return idMatchMap;
-    }
-    
-    public void setIdMatchMap(List<Map<Day, Integer>> idMatchMap) {
-        this.idMatchMap = idMatchMap;
-    }
-    
-    public idMatchMapClass(Integer id) {
-        this.id = id;
-    }
-    public Integer getMinDelta(int _match) {
-        Integer _minDelta = 1000000000;
-        for (Map<Day, Integer> _dayDelta : idMatchMap) {
-            if (_dayDelta.containsKey(_match)) {
-                if (_dayDelta.get(_match) < _minDelta) {
-                    _minDelta = _dayDelta.get(_match);
-                }
-            }
-        }
-        return _minDelta;
-    }
-    public void deleteOtherDeltas(int _match) {
-        Integer _minDelta = getMinDelta(_match);
-        for (Map<Day, Integer> _dayDelta : idMatchMap) {
-            if (_dayDelta.containsKey(_match)) {
-                if (_dayDelta.get(_match) != _minDelta) {
-                    _dayDelta.remove(_match);
-                }
-            }
-        }
-    }
-    public class idMatchMapClassElement {
-
-        public int getMatchId() {
-            return 0;
-        }
-
-        public Integer getDayId() {
+    public Long get(Long id, Day day){
+        if(!idMatchCollection.containsKey(id)){
             return null;
         }
-// make getDiff method to return delta for that match and day
-
-        public Integer getDiff() {
-            return null;
+        return idMatchCollection.get(id).get(day);
+    }
+    public void remove(Long id, Day day){
+        if(!idMatchCollection.containsKey(id)){
+            return;
+        }
+        idMatchCollection.get(id).remove(day);
+    }
+    public boolean contains(Long id){
+        return idMatchCollection.containsKey(id);
+    }
+    public boolean contains(Long id, Day day){
+        if(!idMatchCollection.containsKey(id)){
+            return false;
+        }
+        return idMatchCollection.get(id).containsKey(day);
+    }
+    public void clear(){
+        idMatchCollection.clear();
+    }
+    public void clear(Long id){
+        idMatchCollection.remove(id);
+    }
+    public void clear(Long id, Day day){
+        if(!idMatchCollection.containsKey(id)){
+            return;
+        }
+        idMatchCollection.get(id).remove(day);
+    }
+    public void clear(Long id, List<Day> days){
+        if(!idMatchCollection.containsKey(id)){
+            return;
+        }
+        for(Day day: days){
+            idMatchCollection.get(id).remove(day);
         }
     }
-    public idMatchMapClassElement[] getList() {
-        return null;
+    public void clear(List<Long> ids){
+        for(Long id: ids){
+            idMatchCollection.remove(id);
+        }
+    }
+    public void clear(List<Long> ids, List<Day> days){
+        for(Long id: ids){
+            for(Day day: days){
+                idMatchCollection.get(id).remove(day);
+            }
+        }
+    }
+    // get day by id
+    public List<Day> getDays(Long id){
+        if(!idMatchCollection.containsKey(id)){
+            return null;
+        }
+        List<Day> days = new ArrayList<>();
+        for(Day day : idMatchCollection.get(id).keySet()){
+            if(idMatchCollection.get(id).containsKey(day)){
+                days.add(day);
+            }
+        }
+        return days;
+    }
+    // get id by day
+    public List<Long> getIds(Day day){
+        List<Long> ids = new ArrayList<>();
+        for(Long id : idMatchCollection.keySet()){
+            if(idMatchCollection.get(id).containsKey(day)){
+                ids.add(id);
+            }
+        }
+        return ids;
     }
     
+
+
+
 }
